@@ -23,13 +23,15 @@ public class UsuarioRepositoryMock {
         usuarios = Arrays.asList(mapper.readValue(is, Usuario[].class));
     }
 
-    public List<Usuario> findAllFiltered(String role, int limit, String sort) {
+    public List<Usuario> findAllFiltered(String q, String role, Boolean isActive, String sort) {
         return usuarios.stream()
+                .filter(u -> q == null || u.getName().toLowerCase().contains(q.toLowerCase())
+                        || u.getEmail().toLowerCase().contains(q.toLowerCase()))
                 .filter(u -> role == null || u.getRole().equalsIgnoreCase(role))
+                .filter(u -> isActive == null || u.getIsActive().equals(isActive))
                 .sorted("desc".equalsIgnoreCase(sort)
                         ? Comparator.comparing(Usuario::getId).reversed()
                         : Comparator.comparing(Usuario::getId))
-                .limit(limit)
                 .collect(Collectors.toList());
     }
 

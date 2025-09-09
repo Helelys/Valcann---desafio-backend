@@ -16,9 +16,9 @@ public class UsuarioService {
 
     private final UsuarioRepositoryMock repo;
 
-    public List<Usuario> listar(String role, int limit, String sort) {
-        log.info("Listando usuários | Filtro: role={}, limit={}, sort={}", role, limit, sort);
-        return repo.findAllFiltered(role, limit, sort);
+    public List<Usuario> filtrarUsuarios(String q, String role, Boolean isActive, String sort) {
+        log.info("Filtrando usuários | q={}, role={}, is_active={}, sort={}", q, role, isActive, sort);
+        return repo.findAllFiltered(q, role, isActive, sort);
     }
 
     public Usuario buscarPorId(Long id) {
