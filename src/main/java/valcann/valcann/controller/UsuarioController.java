@@ -1,29 +1,33 @@
 package valcann.valcann.controller;
 
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import valcann.valcann.model.Usuario;
-import valcann.valcann.service.UsuarioRepositoryMock;
+import valcann.valcann.service.UsuarioService;
+
+import java.util.List;
 
 @RestController
-@ResponseBody
-@Data
+@RequestMapping("/usuarios")
+@RequiredArgsConstructor
 public class UsuarioController {
 
-    private final UsuarioRepositoryMock usuarioRepositoryMock;
+    private final UsuarioService usuarioService;
 
     @GetMapping
-    public String getUsuarios() {
-        return usuarioRepositoryMock.findAll().toString();
+    public ResponseEntity<List<Usuario>> getUsuarios(
+            @RequestParam(required = false) String role,
+            @RequestParam(required = false, defaultValue = "10") int limit,
+            @RequestParam(required = false, defaultValue = "asc") String sort
+    ) {
+        List<Usuario> usuarios = usuarioService.listar(role, limit, sort);
+        return ResponseEntity.ok(usuarios);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> buscarPorId(@PathVariable Long id) {
-        Usuario usuario = usuarioRepositoryMock.findById(id);
+        Usuario usuario = usuarioService.buscarPorId(id);
         if (usuario != null) {
             return ResponseEntity.ok(usuario);
         } else {
