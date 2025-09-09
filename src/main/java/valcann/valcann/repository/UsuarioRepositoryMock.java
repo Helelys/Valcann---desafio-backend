@@ -1,18 +1,18 @@
-package valcann.valcann.service;
+package valcann.valcann.repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import valcann.valcann.model.Usuario;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Service
+@Repository
 public class UsuarioRepositoryMock {
     private List<Usuario> usuarios;
 
@@ -23,8 +23,14 @@ public class UsuarioRepositoryMock {
         usuarios = Arrays.asList(mapper.readValue(is, Usuario[].class));
     }
 
-    public List<Usuario> findAll() {
-        return usuarios;
+    public List<Usuario> findAllFiltered(String role, int limit, String sort) {
+        return usuarios.stream()
+                .filter(u -> role == null || u.getRole().equalsIgnoreCase(role))
+                .sorted("desc".equalsIgnoreCase(sort)
+                        ? Comparator.comparing(Usuario::getId).reversed()
+                        : Comparator.comparing(Usuario::getId))
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 
     public Usuario findById(Long id) {
