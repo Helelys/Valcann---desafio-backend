@@ -3,6 +3,8 @@ package valcann.valcann.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import valcann.valcann.model.Usuario;
 
 import java.io.IOException;
@@ -10,14 +12,14 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
-@Configuration
+@Service
 public class UsuarioRepositoryMock {
     private List<Usuario> usuarios;
 
     @PostConstruct
     public void init() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        InputStream is = getClass().getResourceAsStream("../../resources/mock-users.json");
+        InputStream is = getClass().getResourceAsStream("/mock-users.json");
         usuarios = Arrays.asList(mapper.readValue(is, Usuario[].class));
     }
 

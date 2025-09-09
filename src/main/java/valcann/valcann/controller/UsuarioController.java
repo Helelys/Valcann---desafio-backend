@@ -1,6 +1,8 @@
 package valcann.valcann.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,16 +11,18 @@ import org.springframework.web.bind.annotation.RestController;
 import valcann.valcann.model.Usuario;
 import valcann.valcann.service.UsuarioRepositoryMock;
 
+import java.util.List;
+
 @RestController
 @ResponseBody
-@Data
+@RequiredArgsConstructor
 public class UsuarioController {
 
     private final UsuarioRepositoryMock usuarioRepositoryMock;
 
     @GetMapping
-    public String getUsuarios() {
-        return usuarioRepositoryMock.findAll().toString();
+    public List<Usuario> getUsuarios() {
+        return usuarioRepositoryMock.findAll();
     }
 
     @GetMapping("/{id}")
